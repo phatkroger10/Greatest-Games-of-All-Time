@@ -1,4 +1,7 @@
-# Cloudflare Pages: serve the static site from ./site (no build step needed).
-name = "greatest-games"
-pages_build_output_dir = "site"
+# Cloudflare Worker that serves the static site in ./site (no build step, no server code).
+name = "greatest-games-of-all-time"
 compatibility_date = "2026-10-01"
+
+[assets]
+directory = "./site"
+not_found_handling = "404-page"

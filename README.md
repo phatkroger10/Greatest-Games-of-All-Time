@@ -42,12 +42,14 @@ python -m http.server -d site 8000 # then open http://localhost:8000
 
 `fetch_cfb.py` uses about 20 API calls per season (games, lines, polls, plus one play-by-play call per week). Finished seasons are cached and skipped, so a weekly refresh costs only a handful of calls.
 
-## Deploying on Cloudflare Pages
+## Deploying on Cloudflare
 
-1. Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**, and pick this repo.
-2. Build command: *(leave empty)*. Build output directory: `site`.
-3. Add your custom domain under the project's **Custom domains** tab.
+The site is served by a Cloudflare Worker with static assets (see `wrangler.toml`), with no server code and no build step.
+
+1. Cloudflare dashboard → **Workers & Pages** → the `greatest-games-of-all-time` Worker → **Settings → Build**, connected to this repo.
+2. Production branch: `main`. Build command: *(empty)*. Deploy command: `npx wrangler deploy`.
+3. Add a custom domain under **Settings → Domains & Routes**.
 
 ## Automatic refresh
 
-The GitHub Action in `.github/workflows/refresh-cfb.yml` runs on Sundays and Wednesdays from August through January. It fetches new games, re-grades and commits, which triggers a Cloudflare redeploy. It needs a repository secret named `CFBD_API_KEY` (**Settings → Secrets and variables → Actions**). You can also run it by hand from the **Actions** tab.
+The GitHub Action in `.github/workflows/refresh-cfb.yml` runs on Sundays and Wednesdays from August through January. It fetches new games, re-grades and commits, which triggers a Cloudflare redeploy (the workflow only runs from the default branch). It needs a repository secret named `CFBD_API_KEY` (**Settings → Secrets and variables → Actions**). You can also run it by hand from the **Actions** tab.
