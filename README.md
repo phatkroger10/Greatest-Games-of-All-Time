@@ -8,12 +8,12 @@ Each game gets six category scores from 0 to 1. The site combines them using the
 
 | Category | Default weight | What it measures |
 |---|---|---|
-| Competitiveness | 25 | Final margin, and the share of the game played within one score |
-| Drama | 25 | Lead changes and ties (extra credit in the last 5 minutes or OT), the biggest deficit the winner overcame, CFBD excitement index (2014+) |
-| Finish | 20 | Overtime, and how late the winning lead was taken (walk-offs score highest) |
-| Stakes | 15 | AP rankings of both teams, rivalries, conference title games, bowls, playoff |
-| Upset | 10 | The winner's pregame win chance, from the betting spread (2013+) or Elo ratings |
-| Fireworks | 5 | Combined points, with a bump when both teams score 35+ |
+| Competitiveness | 5 | Final margin, and the share of the game played within one score |
+| Drama | 20 | Lead changes and ties (extra credit in the last 5 minutes or OT), the biggest deficit the winner overcame, CFBD excitement index (2014+) |
+| Finish | 30 | Overtime, and how late the winning lead was taken (walk-offs score highest) |
+| Stakes | 30 | AP rankings of both teams, rivalries, conference title games, bowls, playoff |
+| Upset | 13 | The winner's pregame win chance, from the betting spread (2013+) or Elo ratings |
+| Fireworks | 2 | Combined points, with a bump when both teams score 35+ |
 
 The total is a **score from 0 to 100**. **Letter grades are curved** across every game in the database: A+ is the top 1%, A the top 3%, B the top 18%, C the top 50%, and so on (see `grades` in the rubric file).
 

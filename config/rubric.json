@@ -3,53 +3,92 @@
     {
       "key": "competitiveness",
       "label": "Competitiveness",
-      "weight": 25,
+      "weight": 5,
       "description": "How close it was: final margin plus the share of the game played within one score (8 points)."
     },
     {
       "key": "drama",
       "label": "Drama",
-      "weight": 25,
+      "weight": 20,
       "description": "Lead changes and ties (especially in the last five minutes or overtime), the biggest deficit the winner overcame, and CFBD's win-probability excitement index (2014+)."
     },
     {
       "key": "finish",
       "label": "Finish",
-      "weight": 20,
+      "weight": 30,
       "description": "How late it was decided: overtime, go-ahead or tying scores in the final minutes, walk-off endings."
     },
     {
       "key": "stakes",
       "label": "Stakes",
-      "weight": 15,
+      "weight": 30,
       "description": "What was on the line: rankings of both teams, rivalries, conference title games, bowls and the playoff."
     },
     {
       "key": "upset",
       "label": "Upset",
-      "weight": 10,
+      "weight": 13,
       "description": "How unlikely the winner was before kickoff, from the betting spread (2013+) or Elo ratings."
     },
     {
       "key": "fireworks",
       "label": "Fireworks",
-      "weight": 5,
+      "weight": 2,
       "description": "Combined scoring, with a bump when both teams put up 35+."
     }
   ],
   "grades": [
-    { "grade": "A+", "topPercent": 1 },
-    { "grade": "A", "topPercent": 3 },
-    { "grade": "A-", "topPercent": 6 },
-    { "grade": "B+", "topPercent": 11 },
-    { "grade": "B", "topPercent": 18 },
-    { "grade": "B-", "topPercent": 27 },
-    { "grade": "C+", "topPercent": 38 },
-    { "grade": "C", "topPercent": 50 },
-    { "grade": "C-", "topPercent": 62 },
-    { "grade": "D+", "topPercent": 72 },
-    { "grade": "D", "topPercent": 82 },
-    { "grade": "D-", "topPercent": 90 },
-    { "grade": "F", "topPercent": 100 }
+    {
+      "grade": "A+",
+      "topPercent": 1
+    },
+    {
+      "grade": "A",
+      "topPercent": 3
+    },
+    {
+      "grade": "A-",
+      "topPercent": 6
+    },
+    {
+      "grade": "B+",
+      "topPercent": 11
+    },
+    {
+      "grade": "B",
+      "topPercent": 18
+    },
+    {
+      "grade": "B-",
+      "topPercent": 27
+    },
+    {
+      "grade": "C+",
+      "topPercent": 38
+    },
+    {
+      "grade": "C",
+      "topPercent": 50
+    },
+    {
+      "grade": "C-",
+      "topPercent": 62
+    },
+    {
+      "grade": "D+",
+      "topPercent": 72
+    },
+    {
+      "grade": "D",
+      "topPercent": 82
+    },
+    {
+      "grade": "D-",
+      "topPercent": 90
+    },
+    {
+      "grade": "F",
+      "topPercent": 100
+    }
   ]
 }

@@ -420,7 +420,7 @@ def main():
         for i, g in enumerate(ranked[: args.top], 1):
             h, a = g["home"], g["away"]
             print(f"{i:>3}. {default_score(g['cats']):5.1f}  {g['season']} {a['name']} {a['pts']} @ {h['name']} {h['pts']}"
-                  f"  [{', '.join(g['tags'])}] {g['notes'] or ''}")
+                  f"  [{', '.join(g['tags'])}] {g.get('notes', '')}")
 
 
 if __name__ == "__main__":

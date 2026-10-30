@@ -3,7 +3,7 @@
 
   const SPORT = "cfb";
   const PAGE = 50;
-  const WEIGHTS_KEY = `gg-weights-${SPORT}`;
+  let WEIGHTS_KEY = `gg-weights-${SPORT}`;
 
   const $ = (id) => document.getElementById(id);
   const el = {
@@ -393,6 +393,8 @@
     meta = m;
     games = g;
     defaultWeights = meta.rubric.categories.map((c) => c.weight);
+    // Saved slider weights are tied to the defaults, so changing the defaults resets everyone.
+    WEIGHTS_KEY = `gg-weights-${SPORT}-${defaultWeights.join("-")}`;
     const saved = store.get(WEIGHTS_KEY);
     weights = Array.isArray(saved) && saved.length === defaultWeights.length ? saved : [...defaultWeights];
 
