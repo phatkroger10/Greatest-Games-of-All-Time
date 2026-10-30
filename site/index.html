@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Greatest Games of All Time</title>
+  <meta name="description" content="Every college football game since 2004, graded on competitiveness, drama, finish, stakes, upset and fireworks.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏈</text></svg>">
+</head>
+<body>
+  <header class="top">
+    <div class="wrap top-inner">
+      <a class="brand" href="./">
+        <span class="brand-mark">GG</span>
+        <span class="brand-text">Greatest Games<small>of All Time</small></span>
+      </a>
+      <nav class="sports" aria-label="Sport">
+        <button class="sport active" data-sport="cfb">College Football</button>
+        <button class="sport" disabled title="Coming soon">College Basketball</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="intro">
+      <h1>Every game, graded.</h1>
+      <p id="intro-sub">Loading games…</p>
+    </section>
+
+    <section class="controls" aria-label="Filters">
+      <div class="row">
+        <label class="field">
+          <span>From</span>
+          <select id="f-from"></select>
+        </label>
+        <label class="field">
+          <span>To</span>
+          <select id="f-to"></select>
+        </label>
+        <label class="field">
+          <span>Season type</span>
+          <select id="f-type">
+            <option value="">All</option>
+            <option value="reg">Regular season</option>
+            <option value="post">Postseason</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Week</span>
+          <select id="f-week"></select>
+        </label>
+        <label class="field grow">
+          <span>Team</span>
+          <input id="f-team" list="team-list" placeholder="Any team" autocomplete="off">
+          <datalist id="team-list"></datalist>
+        </label>
+        <label class="field">
+          <span>Conference</span>
+          <select id="f-conf"></select>
+        </label>
+      </div>
+      <div class="row">
+        <label class="field">
+          <span>Stage</span>
+          <select id="f-stage">
+            <option value="">Any</option>
+            <option value="playoff">Playoff &amp; title games</option>
+            <option value="major">Major bowls &amp; playoff</option>
+            <option value="bowl">Any bowl</option>
+            <option value="conf_champ">Conference title games</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Minimum grade</span>
+          <select id="f-grade"></select>
+        </label>
+        <label class="field">
+          <span>Sort by</span>
+          <select id="f-sort">
+            <option value="score">Highest score</option>
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="margin">Closest margin</option>
+            <option value="leadChanges">Most lead changes</option>
+            <option value="comeback">Biggest comeback</option>
+            <option value="upset">Biggest upset</option>
+            <option value="total">Most points</option>
+          </select>
+        </label>
+        <div class="toggles" role="group" aria-label="Quick filters">
+          <label class="chip"><input type="checkbox" id="t-fbs"><span>FBS vs FBS</span></label>
+          <label class="chip"><input type="checkbox" id="t-ranked"><span>Ranked vs ranked</span></label>
+          <label class="chip"><input type="checkbox" id="t-ot"><span>Overtime</span></label>
+          <label class="chip"><input type="checkbox" id="t-upset"><span>Upsets</span></label>
+          <label class="chip"><input type="checkbox" id="t-comeback"><span>Comebacks</span></label>
+          <label class="chip"><input type="checkbox" id="t-rivalry"><span>Rivalries</span></label>
+        </div>
+      </div>
+      <div class="row row-end">
+        <button class="link" id="btn-rubric" aria-expanded="false" aria-controls="rubric">Adjust the rubric</button>
+        <button class="link" id="btn-reset">Reset filters</button>
+      </div>
+      <div id="rubric" class="rubric" hidden>
+        <p class="rubric-note">Drag to change how much each category counts. Grades are curved: an A+ is the top 1% of all games under your weights.</p>
+        <div id="rubric-sliders" class="rubric-grid"></div>
+        <button class="link" id="btn-rubric-reset">Restore default weights</button>
+      </div>
+    </section>
+
+    <section class="results" aria-live="polite">
+      <div class="results-head">
+        <span id="count"></span>
+      </div>
+      <ol id="list" class="list"></ol>
+      <div class="more"><button id="btn-more" class="btn" hidden>Show more</button></div>
+    </section>
+  </main>
+
+  <dialog id="detail" class="detail" aria-labelledby="d-title">
+    <div class="detail-inner">
+      <button class="close" id="d-close" aria-label="Close">×</button>
+      <div id="d-body"></div>
+    </div>
+  </dialog>
+
+  <footer class="foot wrap">
+    <p>Data from <a href="https://collegefootballdata.com" target="_blank" rel="noopener">CollegeFootballData.com</a>. Scores 0–100; letter grades are curved across all games. <span id="generated"></span></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

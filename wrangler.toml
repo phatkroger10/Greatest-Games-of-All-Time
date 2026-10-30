@@ -1,0 +1,4 @@
+# Cloudflare Pages: serve the static site from ./site (no build step needed).
+name = "greatest-games"
+pages_build_output_dir = "site"
+compatibility_date = "2026-10-01"

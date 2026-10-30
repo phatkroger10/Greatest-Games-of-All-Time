@@ -1,0 +1,47 @@
+name: Refresh college football data
+
+# Pulls new games from CFBD, re-grades everything and commits the updated data.
+# Cloudflare Pages redeploys automatically when the commit lands.
+on:
+  schedule:
+    # Sundays and Wednesdays, August through January (UTC).
+    - cron: "17 12 * 8-12,1 0,3"
+  workflow_dispatch:
+    inputs:
+      seasons:
+        description: "Seasons to fetch (e.g. current, 2025, 2004-2025)"
+        default: "current"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-cfb
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Fetch from CFBD
+        env:
+          CFBD_API_KEY: ${{ secrets.CFBD_API_KEY }}
+        run: python pipeline/fetch_cfb.py "${{ github.event.inputs.seasons || 'current' }}"
+      - name: Grade games
+        run: python pipeline/grade_cfb.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data site/data
+          if git diff --cached --quiet; then
+            echo "No new games."
+          else
+            git commit -m "Refresh college football data"
+            git push
+          fi
