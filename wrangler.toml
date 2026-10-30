@@ -5,3 +5,7 @@ compatibility_date = "2026-10-01"
 [assets]
 directory = "./site"
 not_found_handling = "404-page"
+
+# Lets Cloudflare build preview versions of non-production branches (`wrangler preview`).
+# Empty on purpose: previews reuse the settings above.
+[previews]
