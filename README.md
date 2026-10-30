@@ -10,7 +10,7 @@ Each game gets six category scores from 0 to 1. The site combines them using the
 |---|---|---|
 | Competitiveness | 5 | Final margin, and the share of the game played within one score |
 | Drama | 20 | Lead changes and ties (extra credit in the last 5 minutes or OT), the biggest deficit the winner overcame, CFBD excitement index (2014+) |
-| Finish | 30 | Overtime, and how late the winning lead was taken (walk-offs score highest) |
+| Finish | 30 | Overtime, and how late the winning lead was taken (walk-offs score highest, and a game-winning TD beats a game-winning FG) |
 | Stakes | 30 | AP rankings of both teams, rivalries, conference title games, bowls, playoff |
 | Upset | 13 | The winner's pregame win chance, from the betting spread (2013+) or Elo ratings |
 | Fireworks | 2 | Combined points, with a bump when both teams score 35+ |

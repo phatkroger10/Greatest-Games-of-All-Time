@@ -143,6 +143,7 @@ def timeline_metrics(tl, home_won):
     winner_max_deficit = 0
     within8 = 0.0
     decided_t = 0
+    win_type = None  # how the winner took the lead for good: "TD", "FG" or "Safety"
     late_swings = 0  # lead changes or ties in the last 5 minutes of regulation or in OT
     trailed_in_4th_by = 0
 
@@ -171,6 +172,7 @@ def timeline_metrics(tl, home_won):
         prev_m = (states[i - 1][1] - states[i - 1][2]) * sign
         if m > 0 and prev_m <= 0:
             decided_t = t  # winner took the lead for good (latest such moment)
+            win_type = score_type(states, i, sign)
 
     return {
         "leadChanges": lead_changes,
@@ -179,8 +181,30 @@ def timeline_metrics(tl, home_won):
         "trailed4th": trailed_in_4th_by,
         "within8": within8 / end if end else 0,
         "decidedT": decided_t,
+        "winType": win_type,
         "lateSwings": late_swings,
     }
+
+
+def winner_points(states, i, sign):
+    """Points the winner scored going into state i."""
+    (_, h0, a0), (_, h1, a1) = states[i - 1], states[i]
+    return (h1 - h0) if sign > 0 else (a1 - a0)
+
+
+def score_type(states, i, sign):
+    """Classify the go-ahead score at state i as a touchdown, field goal or safety."""
+    pts = winner_points(states, i, sign)
+    if pts >= 6:
+        return "TD"
+    if pts == 3:
+        return "FG"
+    # An extra point or two-point try that breaks a tie belongs to the touchdown just before it.
+    if pts in (1, 2) and i >= 2 and winner_points(states, i - 1, sign) == 6 and states[i][0] - states[i - 1][0] <= 60:
+        return "TD"
+    if pts == 2:
+        return "Safety"
+    return None
 
 
 # ---------------------------------------------------------------- categories
@@ -205,18 +229,19 @@ def drama(tm, excitement):
 
 
 def finish(margin, ot, tm, coarse):
+    td = tm["winType"] == "TD"  # a game-winning touchdown beats a game-winning field goal
     if ot:
-        s = 0.75 + 0.08 * (ot - 1)
+        s = 0.75 + 0.08 * (ot - 1) + (0.08 if td else 0)
     else:
         left = REG - tm["decidedT"]
         if coarse:  # only know the quarter: give partial credit for a 4th-quarter go-ahead
             s = 0.45 if tm["decidedT"] >= REG else 0.0
         elif left <= 10:
-            s = 1.0
+            s = 1.0 if td else 0.85
         elif left <= 60:
-            s = 0.9
+            s = 0.92 if td else 0.82
         elif left <= 120:
-            s = 0.8
+            s = 0.82 if td else 0.75
         elif left <= 300:
             s = 0.6
         elif left <= 600:
@@ -318,7 +343,7 @@ def grade_season(season):
         if ot:
             tags.append("OT" if ot == 1 else f"{ot}OT")
         if not ot and not coarse and REG - tm["decidedT"] <= 10:
-            tags.append("Walk-off")
+            tags.append(f"Walk-off {tm['winType']}" if tm["winType"] in ("TD", "FG") else "Walk-off")
         elif not ot and not coarse and REG - tm["decidedT"] <= 120:
             tags.append("Late winner")
         if tm["comeback"] >= 14:
@@ -354,6 +379,7 @@ def grade_season(season):
                 "margin": margin, "total": hp + ap, "ot": ot,
                 "leadChanges": tm["leadChanges"], "ties": tm["ties"], "comeback": tm["comeback"],
                 "decidedLeft": None if coarse or ot else max(0, REG - tm["decidedT"]),
+                "winType": None if coarse else tm["winType"],
                 "excitement": round(g["excitement"], 2) if g.get("excitement") is not None else None,
                 "spread": line.get("spread") if line else None,
                 "winProb": round(wp, 3) if wp is not None else None, "winProbSrc": wp_src,

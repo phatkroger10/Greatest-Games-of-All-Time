@@ -16,7 +16,7 @@
       "key": "finish",
       "label": "Finish",
       "weight": 30,
-      "description": "How late it was decided: overtime, go-ahead or tying scores in the final minutes, walk-off endings."
+      "description": "How late it was decided: overtime, go-ahead or tying scores in the final minutes, walk-off endings. A game-winning touchdown counts more than a game-winning field goal."
     },
     {
       "key": "stakes",

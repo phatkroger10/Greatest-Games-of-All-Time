@@ -161,7 +161,7 @@
     const hot = new Set(["Walk-off", "Upset"]);
     const items = [];
     if (g.stageLabel && g.stage !== "bowl") items.push(`<span class="tag hot">${esc(g.stageLabel)}</span>`);
-    for (const t of g.tags) items.push(`<span class="tag${hot.has(t) || /OT$/.test(t) ? " hot" : ""}">${esc(t)}</span>`);
+    for (const t of g.tags) items.push(`<span class="tag${hot.has(t) || /OT$|^Walk-off/.test(t) ? " hot" : ""}">${esc(t)}</span>`);
     return items.length ? `<div class="tags">${items.join("")}</div>` : "";
   }
 
@@ -268,6 +268,7 @@
     ];
     if (m.ot) facts.push([m.ot === 1 ? "OT" : `${m.ot}OT`, "Overtime"]);
     else if (m.decidedLeft != null) facts.push([clockLeft(m.decidedLeft), "Left when the winning lead was taken"]);
+    if (m.winType) facts.push([{ TD: "TD", FG: "FG", Safety: "Safety" }[m.winType], "How the winning lead was taken"]);
     if (m.winProb != null) facts.push([`${Math.round(m.winProb * 100)}%`, `${esc(w.name)}'s pregame win chance (${m.winProbSrc === "spread" ? "Vegas" : "Elo"})`]);
     if (m.spread != null) {
       const fav = m.spread < 0 ? g.home : g.away;
