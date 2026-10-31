@@ -18,7 +18,11 @@ import argparse
 import datetime as dt
 import json
 import math
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from stars_cfb import StarIndex, star_power_raw  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "data" / "cfb"
@@ -296,7 +300,7 @@ def fireworks(hp, ap):
 # ---------------------------------------------------------------- main
 
 
-def grade_season(season):
+def grade_season(season, stars):
     games_out, timelines_out = [], {}
     rankings, lines, tls = season["rankings"], season["lines"], season["timelines"]
 
@@ -329,6 +333,20 @@ def grade_season(season):
         line = lines.get(gid)
         wp, wp_src = winner_pregame_prob(g, home_won, line)
         winner_rank, loser_rank = (hr, ar) if home_won else (ar, hr)
+
+        # Star Power and Star Performance (raw here; scaled across all games in main()).
+        h_total, h_stars, h_est = stars.team_stars(g["home"], g["season"])
+        a_total, a_stars, a_est = stars.team_stars(g["away"], g["season"])
+        perfs = []
+        for name, team, pts, line_txt in stars.performances(g["season"], g["id"]):
+            is_home = team == g["home"]
+            opp_rank = ar if is_home else hr
+            won = is_home == home_won
+            ctx = 0.7 + 0.3 * max(STAGE_VALUE[stage], rank_value(opp_rank)) + (0.1 if won else 0)
+            perfs.append((pts * ctx, name, "home" if is_home else "away", line_txt, pts))
+        perfs.sort(key=lambda x: -x[0])
+        perf_raw = (perfs[0][0] + 0.25 * perfs[1][0]) if len(perfs) > 1 else (perfs[0][0] if perfs else 0)
+        r1 = sum(1 for lst in (h_stars, a_stars) for v, _, lab in lst if lab.startswith("1st-round"))
 
         cats = [
             competitiveness(margin, tm),
@@ -386,6 +404,15 @@ def grade_season(season):
                 "detail": "quarters" if coarse else "plays",
             },
             "tags": tags,
+            "stars": {
+                "home": [[n, lab] for v, n, lab in h_stars[:4] if v >= 0.5],
+                "away": [[n, lab] for v, n, lab in a_stars[:4] if v >= 0.5],
+            },
+            "perf": [[n, side, txt, round(pts, 1)] for _, n, side, txt, pts in perfs[:2]],
+            "_star": star_power_raw(h_total, a_total),
+            "_perf": perf_raw,
+            "_r1": r1,
+            "_starEst": h_est or a_est,
         }))
         timelines_out[gid] = tl
     return games_out, timelines_out
@@ -396,6 +423,33 @@ def drop_empty(obj):
     if isinstance(obj, dict):
         return {k: drop_empty(v) for k, v in obj.items() if v is not None and v is not False}
     return obj
+
+
+def percentile(values, q):
+    vals = sorted(values)
+    return vals[min(len(vals) - 1, int(q * len(vals)))] if vals else 1.0
+
+
+def scale_star_categories(games):
+    """Turn raw Star Power / Star Performance into 0-1 scores against the whole database."""
+    star_top = percentile([g["_star"] for g in games], 0.98) or 1
+    perf_top = percentile([g["_perf"] for g in games if g["_perf"] > 0], 0.995) or 1
+    for g in games:
+        star = clamp(g.pop("_star") / star_top) ** 0.8
+        perf = clamp(g.pop("_perf") / perf_top)
+        g["cats"] += [round(star, 3), round(perf, 3)]
+        g["m"]["r1"] = g.pop("_r1") or None
+        if g.pop("_starEst", False):
+            g["m"]["starEst"] = True
+        if star >= 0.99:
+            g["tags"].append("Loaded rosters")
+        if g["perf"]:
+            g["m"]["perfPts"] = g["perf"][0][3]
+        if perf >= 0.97 and g["perf"]:
+            g["tags"].append("Monster game")
+        if not g["m"]["r1"]:
+            del g["m"]["r1"]
+        g["m"] = drop_empty(g["m"])
 
 
 def default_score(cats):
@@ -409,19 +463,33 @@ def main():
     args = ap.parse_args()
 
     teams = json.loads((CACHE / "teams.json").read_text())
+    stars = StarIndex()
     all_games = []
     (OUT / "timelines").mkdir(parents=True, exist_ok=True)
     seasons = []
+    timelines = {}
     for path in sorted(CACHE.glob("[0-9][0-9][0-9][0-9].json")):
         season = json.loads(path.read_text())
-        games, tls = grade_season(season)
+        games, tls = grade_season(season, stars)
         if not games:
             continue
         seasons.append(season["season"])
         all_games.extend(games)
-        (OUT / "timelines" / f"{season['season']}.json").write_text(json.dumps(tls, separators=(",", ":")))
+        timelines[season["season"]] = tls
         print(f"{season['season']}: graded {len(games)} games")
 
+    scale_star_categories(all_games)
+    # Star lists and stat lines only load when someone opens a game, so they live with the
+    # per-season score timelines instead of the main games file.
+    for g in all_games:
+        detail = timelines[g["season"]][str(g["id"])]
+        stars, perf = g.pop("stars"), g.pop("perf")
+        if stars["home"] or stars["away"]:
+            detail["stars"] = stars
+        if perf:
+            detail["perf"] = perf
+    for year, tls in timelines.items():
+        (OUT / "timelines" / f"{year}.json").write_text(json.dumps(tls, separators=(",", ":")))
     all_games.sort(key=lambda g: (g["date"], g["id"]))
     (OUT / "games.json").write_text(json.dumps(all_games, separators=(",", ":")))
 

@@ -222,6 +222,16 @@ button, input, select { font: inherit; color: inherit; }
 .fact b { display: block; font: 700 22px/1 "Barlow Condensed", sans-serif; }
 .fact span { font-size: 12px; color: var(--ink-3); }
 
+.people { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.people li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; font-size: 13px; padding: 8px 10px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; }
+.people .who { color: var(--ink-3); font-size: 12px; }
+.people .what { color: var(--ink-2); flex-basis: 100%; }
+.people .pts-badge { margin-left: auto; order: 2; font: 700 16px/1 "Barlow Condensed", sans-serif; color: var(--accent); }
+.stars-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stars-grid h4 { margin: 0 0 6px; font-size: 13px; }
+.stars-grid .none, .d-section .note { color: var(--ink-3); font-size: 12px; margin: 4px 0 0; }
+@media (max-width: 560px) { .stars-grid { grid-template-columns: 1fr; } }
+
 .foot { color: var(--ink-3); font-size: 12px; padding: 24px 16px 40px; }
 
 @media (max-width: 760px) {

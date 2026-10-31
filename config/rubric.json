@@ -35,6 +35,18 @@
       "label": "Fireworks",
       "weight": 2,
       "description": "Combined scoring, with a bump when both teams put up 35+."
+    },
+    {
+      "key": "starPower",
+      "label": "Star Power",
+      "weight": 10,
+      "description": "Talent on the field: NFL draft picks on both teams (1st-rounders count most), national stat leaders, and hand-picked stars like Heisman winners. Best when both teams are loaded."
+    },
+    {
+      "key": "performance",
+      "label": "Star Performance",
+      "weight": 10,
+      "description": "The best individual stat line in the game, weighted by the setting: title games, playoff games and ranked opponents count more, as does winning."
     }
   ],
   "grades": [

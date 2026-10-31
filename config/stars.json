@@ -1,0 +1,30 @@
+{
+  "about": "Hand-picked stars who get a Star Power bump in every game they played for that team in the listed seasons. Add anyone: award winners, record-setters, cult heroes. Names should match how CFBD spells them (usually the common name, e.g. 'Mark Ingram').",
+  "value": 1.25,
+  "players": [
+    { "name": "Matt Leinart", "team": "USC", "seasons": [2004, 2005], "note": "Heisman Trophy (2004)" },
+    { "name": "Reggie Bush", "team": "USC", "seasons": [2004, 2005], "note": "Heisman Trophy (2005)" },
+    { "name": "Vince Young", "team": "Texas", "seasons": [2004, 2005], "note": "Heisman runner-up (2005)" },
+    { "name": "Troy Smith", "team": "Ohio State", "seasons": [2005, 2006], "note": "Heisman Trophy (2006)" },
+    { "name": "Tim Tebow", "team": "Florida", "seasons": [2007, 2008, 2009], "note": "Heisman Trophy (2007)" },
+    { "name": "Sam Bradford", "team": "Oklahoma", "seasons": [2007, 2008], "note": "Heisman Trophy (2008)" },
+    { "name": "Mark Ingram", "team": "Alabama", "seasons": [2009, 2010], "note": "Heisman Trophy (2009)" },
+    { "name": "Cam Newton", "team": "Auburn", "seasons": [2010], "note": "Heisman Trophy (2010)" },
+    { "name": "Robert Griffin III", "team": "Baylor", "seasons": [2010, 2011], "note": "Heisman Trophy (2011)" },
+    { "name": "Johnny Manziel", "team": "Texas A&M", "seasons": [2012, 2013], "note": "Heisman Trophy (2012)" },
+    { "name": "Jameis Winston", "team": "Florida State", "seasons": [2013, 2014], "note": "Heisman Trophy (2013)" },
+    { "name": "Marcus Mariota", "team": "Oregon", "seasons": [2013, 2014], "note": "Heisman Trophy (2014)" },
+    { "name": "Derrick Henry", "team": "Alabama", "seasons": [2015], "note": "Heisman Trophy (2015)" },
+    { "name": "Lamar Jackson", "team": "Louisville", "seasons": [2016, 2017], "note": "Heisman Trophy (2016)" },
+    { "name": "Baker Mayfield", "team": "Oklahoma", "seasons": [2016, 2017], "note": "Heisman Trophy (2017)" },
+    { "name": "Kyler Murray", "team": "Oklahoma", "seasons": [2018], "note": "Heisman Trophy (2018)" },
+    { "name": "Joe Burrow", "team": "LSU", "seasons": [2019], "note": "Heisman Trophy (2019)" },
+    { "name": "DeVonta Smith", "team": "Alabama", "seasons": [2020], "note": "Heisman Trophy (2020)" },
+    { "name": "Bryce Young", "team": "Alabama", "seasons": [2021, 2022], "note": "Heisman Trophy (2021)" },
+    { "name": "Caleb Williams", "team": "USC", "seasons": [2022, 2023], "note": "Heisman Trophy (2022)" },
+    { "name": "Jayden Daniels", "team": "LSU", "seasons": [2023], "note": "Heisman Trophy (2023)" },
+    { "name": "Travis Hunter", "team": "Colorado", "seasons": [2023, 2024], "note": "Heisman Trophy (2024)" },
+    { "name": "Jared Zabransky", "team": "Boise State", "seasons": [2004, 2005, 2006], "note": "Boise State legend" },
+    { "name": "Graham Harrell", "team": "Texas Tech", "seasons": [2006, 2007, 2008], "note": "Record-setting Texas Tech passer" }
+  ]
+}

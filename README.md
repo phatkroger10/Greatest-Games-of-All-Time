@@ -4,7 +4,7 @@ A static website that grades sports games on a fixed rubric and lets you filter 
 
 ## How games are graded
 
-Each game gets six category scores from 0 to 1. The site combines them using the weights in [`config/rubric.json`](config/rubric.json), and visitors can adjust the weights with sliders.
+Each game gets eight category scores from 0 to 1. The site combines them using the weights in [`config/rubric.json`](config/rubric.json), and visitors can adjust the weights with sliders.
 
 | Category | Default weight | What it measures |
 |---|---|---|
@@ -14,6 +14,8 @@ Each game gets six category scores from 0 to 1. The site combines them using the
 | Stakes | 30 | AP rankings of both teams, rivalries, conference title games, bowls, playoff |
 | Upset | 13 | The winner's pregame win chance, from the betting spread (2013+) or Elo ratings |
 | Fireworks | 2 | Combined points, with a bump when both teams score 35+ |
+| Star Power | 10 | NFL draft picks on both teams (1st-rounders count most), national stat leaders, and hand-picked stars from [`config/stars.json`](config/stars.json) |
+| Star Performance | 10 | The best individual stat line in the game, weighted up for big games, ranked opponents and wins |
 
 The total is a **score from 0 to 100**. **Letter grades are curved** across every game in the database: A+ is the top 1%, A the top 3%, B the top 18%, C the top 50%, and so on (see `grades` in the rubric file).
 
@@ -23,7 +25,10 @@ The detailed formulas are in [`pipeline/grade_cfb.py`](pipeline/grade_cfb.py).
 
 ```
 config/rubric.json        category weights and grade curve
+config/stars.json         hand-picked stars (Heisman winners, legends) for Star Power
 pipeline/fetch_cfb.py     downloads from CFBD into data/cfb/ (cached per season)
+pipeline/fetch_players_cfb.py  downloads box scores, rosters and NFL draft picks into data/cfb/
+pipeline/stars_cfb.py     Star Power / Star Performance measurements
 pipeline/grade_cfb.py     grades games and writes site/data/cfb/
 data/cfb/                 cached API data (committed, so old seasons are never re-fetched)
 site/                     the website (plain HTML/CSS/JS, no build step)
@@ -36,6 +41,7 @@ site/                     the website (plain HTML/CSS/JS, no build step)
 pip install -r requirements.txt
 export CFBD_API_KEY=...            # your CFBD key
 python pipeline/fetch_cfb.py 2004-2026
+python pipeline/fetch_players_cfb.py 2004-2026
 python pipeline/grade_cfb.py --top 25
 python -m http.server -d site 8000 # then open http://localhost:8000
 ```

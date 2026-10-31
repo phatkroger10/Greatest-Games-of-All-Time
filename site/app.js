@@ -105,6 +105,8 @@
       comeback: (a, b) => b.m.comeback - a.m.comeback || b.score - a.score,
       upset: (a, b) => (a.m.winProb ?? 1) - (b.m.winProb ?? 1) || b.score - a.score,
       total: (a, b) => b.m.total - a.m.total || b.score - a.score,
+      starPower: (a, b) => (b.cats[6] ?? 0) - (a.cats[6] ?? 0) || b.score - a.score,
+      performance: (a, b) => (b.m.perfPts ?? 0) - (a.m.perfPts ?? 0) || b.score - a.score,
     }[f.sort] || ((a, b) => b.score - a.score);
     filtered.sort(by);
     shown = PAGE;
@@ -166,7 +168,7 @@
   }
 
   function barsHtml(g) {
-    const short = ["Close", "Drama", "Finish", "Stakes", "Upset", "Points"];
+    const short = ["Close", "Drama", "Finish", "Stakes", "Upset", "Points", "Stars", "Star game"];
     return `<div class="bars" aria-hidden="true">${g.cats.map((c, i) =>
       `<span>${short[i]}</span><span class="bar"><i style="width:${Math.round(c * 100)}%"></i></span>`).join("")}</div>`;
   }
@@ -276,6 +278,7 @@
     }
     if (m.excitement != null) facts.push([m.excitement.toFixed(1), "CFBD excitement index"]);
     facts.push([m.total, "Total points"]);
+    if (m.r1) facts.push([m.r1, `Future 1st-round NFL picks on the field${m.starEst ? " (so far)" : ""}`]);
     return `<div class="facts">${facts.map(([b, s]) => `<div class="fact"><b>${b}</b><span>${s}</span></div>`).join("")}</div>`;
   }
 
@@ -287,6 +290,24 @@
         <span class="bar"><i style="width:${Math.round(g.cats[i] * 100)}%"></i></span>
         <span class="num">${pts.toFixed(1)} / ${((100 * weights[i]) / total).toFixed(0)}</span>`;
     }).join("")}</div>`;
+  }
+
+  function perfHtml(g, d) {
+    if (!d?.perf?.length) return "";
+    return `<div class="d-section"><h3>Top performances</h3><ul class="people">${d.perf.map(([name, side, line, pts]) =>
+      `<li><b>${esc(name)}</b> <span class="who">${esc(g[side].name)}</span><span class="what">${esc(line)}</span><span class="pts-badge">${pts}</span></li>`).join("")}</ul></div>`;
+  }
+
+  function starsHtml(g, d) {
+    if (!d?.stars) return "";
+    const col = (side) => {
+      const list = d.stars[side] || [];
+      return `<div><h4>${esc(g[side].name)}</h4>${list.length
+        ? `<ul class="people">${list.map(([n, lab]) => `<li><b>${esc(n)}</b><span class="what">${esc(lab)}</span></li>`).join("")}</ul>`
+        : `<p class="none">No marquee names</p>`}</div>`;
+    };
+    const note = g.m.starEst ? `<p class="note">Recent season: not all of these players have been drafted yet, so star power is partly estimated.</p>` : "";
+    return `<div class="d-section"><h3>Stars on the field</h3><div class="stars-grid">${col("away")}${col("home")}</div>${note}</div>`;
   }
 
   async function openDetail(id) {
@@ -307,12 +328,15 @@
       <div class="d-section"><h3>Score</h3>${linescoreHtml(g)}</div>
       <div class="d-section"><h3>Game flow</h3><div id="d-chart">Loading…</div></div>
       <div class="d-section"><h3>How it graded</h3>${categoriesHtml(g)}</div>
-      <div class="d-section"><h3>Key numbers</h3>${factsHtml(g)}</div>`;
+      <div class="d-section"><h3>Key numbers</h3>${factsHtml(g)}</div>
+      <div id="d-extra"></div>`;
     const dlg = $("detail");
     if (!dlg.open) dlg.showModal();
     const tl = await timelineFor(g);
     const box = $("d-chart");
     if (box) box.innerHTML = tl ? chartSvg(g, tl) : "No scoring timeline for this game.";
+    const extra = $("d-extra");
+    if (extra) extra.innerHTML = perfHtml(g, tl) + starsHtml(g, tl);
   }
 
   // ------------------------------------------------------------ rubric sliders
@@ -400,7 +424,7 @@
     weights = Array.isArray(saved) && saved.length === defaultWeights.length ? saved : [...defaultWeights];
 
     const first = meta.seasons[0], last = meta.seasons[meta.seasons.length - 1];
-    $("intro-sub").textContent = `${games.length.toLocaleString()} college football games from ${first} to ${last}, scored 0–100 on competitiveness, drama, finish, stakes, upset and fireworks.`;
+    $("intro-sub").textContent = `${games.length.toLocaleString()} college football games from ${first} to ${last}, scored 0–100 on competitiveness, drama, finish, stakes, upset, fireworks, star power and star performances.`;
     $("generated").textContent = `Updated ${new Date(meta.generatedAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}.`;
 
     fillSelects();
